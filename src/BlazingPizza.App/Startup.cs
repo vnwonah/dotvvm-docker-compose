@@ -26,7 +26,7 @@ namespace BlazingPizza.App
 
             services.AddSingleton(provider => new HttpClient()
             {
-                BaseAddress = new System.Uri("http://localhost:64590/"),
+                BaseAddress = new System.Uri("http://server:64590/"),
                 DefaultRequestHeaders =
                 {
                     Accept =
