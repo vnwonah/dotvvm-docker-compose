@@ -28,6 +28,8 @@ namespace BlazingPizza.Server
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("https://*:64591", "http://*:64590");
+                    webBuilder.UseKestrel();
                 });
     }
 }

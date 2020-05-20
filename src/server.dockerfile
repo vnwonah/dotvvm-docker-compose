@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1.101 AS build
 WORKDIR /app
-EXPOSE 64590
+EXPOSE 64591
 EXPOSE 64590
 
 WORKDIR /app/BlazingPizza.Shared

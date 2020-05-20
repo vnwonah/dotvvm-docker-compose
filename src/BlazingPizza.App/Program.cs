@@ -19,6 +19,8 @@ namespace BlazingPizza.App
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .UseUrls("https://*:8081", "http://*:8080")
+                .UseKestrel()
                 .ConfigureLogging((context, builder) =>
                 {
                     builder.AddConsole();
