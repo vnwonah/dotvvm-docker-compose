@@ -1,54 +1,70 @@
 version: "3"
 
 volumes:
-    mysql_data: {}
+  mysql_data: {}
 
 networks:
-    blazing-net:
+  blazing-net:
 
 services: 
-    mysql:
-        image: mysql:5.7
-        restart: always
-        container_name: mysql
-        environment:
-          MYSQL_ROOT_PASSWORD: ADMIN12345
-        networks:
-          - blazing-net
-        expose:
-          - "3306"
-        volumes:
-          - mysql_data:/var/lib/mysql
-    
-    app:
-        build:
-          context: .
-          dockerfile: app.dockerfile
-        container_name: app
-        restart: always
-        ports:
-          - "8080:8080"
-          - "8081:8081"
-        networks:
-          - blazing-net
-        deploy:
-          restart_policy:
-            condition: on-failure
-            delay: 10s
-        depends_on:
-          - server
-    
-    server:
-        build:
-          context: .
-          dockerfile: server.dockerfile
-        container_name: server
-        restart: always
-        networks:
-          - blazing-net
-        deploy:
-          restart_policy:
-            condition: on-failure
-            delay: 10s
-        depends_on:
-          - mysql
+  mysql:
+    image: mysql:5.7
+    restart: always
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ADMIN12345
+    networks:
+      - blazing-net
+    expose:
+      - "3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  app:
+    build:
+      context: .
+      dockerfile: app.dockerfile
+    container_name: app
+    restart: always
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    networks:
+      - blazing-net
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+    depends_on:
+      - server
+  
+  server:
+    build:
+      context: .
+      dockerfile: server.dockerfile
+    container_name: server
+    restart: always
+    networks:
+      - blazing-net
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+    depends_on:
+      - mysql
+  
+  status:
+    build:
+      context: .
+      dockerfile: status.dockerfile
+    container_name: status
+    restart: always
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - blazing-net
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 10s
