@@ -19,6 +19,8 @@ namespace BlazingPizza.Status
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .UseUrls("https://*:9001", "http://*:9000")
+                .UseKestrel()
                 .ConfigureLogging((context, builder) =>
                 {
                     builder.AddConsole();
