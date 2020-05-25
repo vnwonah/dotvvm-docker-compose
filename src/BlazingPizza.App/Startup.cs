@@ -10,6 +10,9 @@ using DotVVM.Framework.Hosting;
 using DotVVM.Framework.Routing;
 using System.Net.Http;
 using BlazingPizza.App.Services;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
 
 namespace BlazingPizza.App
 {
@@ -23,6 +26,7 @@ namespace BlazingPizza.App
             services.AddDataProtection();
             services.AddWebEncoders();
             services.AddDotVVM<DotvvmStartup>();
+            services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
 
             services.AddSingleton(provider => new HttpClient()
             {
@@ -52,6 +56,20 @@ namespace BlazingPizza.App
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(env.WebRootPath)
+            });
+
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
+                {
+                    Predicate = r => r.Name.Contains("self")
+                });
+                endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
             });
         }
     }
