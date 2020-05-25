@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using DotVVM.Framework.ViewModel;
-using DotVVM.Framework.Hosting;
+﻿using System.Threading.Tasks;
 
 namespace BlazingPizza.Status.ViewModels
 {
-    public class DefaultViewModel : MasterPageViewModel
+	public class DefaultViewModel : MasterPageViewModel
     {
-		public string Title { get; set;}
-
 		public DefaultViewModel()
 		{
-			Title = "Hello from DotVVM!";
 		}
-    }
+
+		public async override Task PreRender()
+		{
+			Context.RedirectToLocalUrl("/hc-ui");
+			await base.PreRender();
+		}
+	}
 }

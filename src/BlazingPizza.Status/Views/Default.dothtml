@@ -1,6 +1,9 @@
 ﻿@viewModel BlazingPizza.Status.ViewModels.DefaultViewModel, BlazingPizza.Status
 @masterPage Views/MasterPage.dotmaster
-<dot:Content ContentPlaceHolderID="MainContent">
+	<dot:Content ContentPlaceHolderID="MainContent">
 
-	<h1>{{value: Title}}</h1>
-</dot:Content>
+		<h1>Hello From Dotvvm</h1>
+
+
+
+	</dot:Content>

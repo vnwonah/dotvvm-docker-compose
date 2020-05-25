@@ -8,6 +8,8 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using DotVVM.Framework.Hosting;
 using DotVVM.Framework.Routing;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace BlazingPizza.Status
 {
@@ -21,6 +23,12 @@ namespace BlazingPizza.Status
             services.AddDataProtection();
             services.AddAuthorization();
             services.AddWebEncoders();
+            services.AddOptions();
+            services.AddHealthChecks()
+                .AddCheck("self", () => HealthCheckResult.Healthy());
+
+
+            services.AddHealthChecksUI();
             services.AddDotVVM<DotvvmStartup>();
         }
 
@@ -31,11 +39,26 @@ namespace BlazingPizza.Status
             // use DotVVM
             var dotvvmConfiguration = app.UseDotVVM<DotvvmStartup>(env.ContentRootPath);
             dotvvmConfiguration.AssertConfigurationIsValid();
-            
+
+            app.UseHealthChecksUI(config =>
+            {
+                config.ResourcesPath = "/ui/resources";
+                config.UIPath = "/hc-ui";
+            });
+
             // use static files
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(env.WebRootPath)
+            });
+
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
+                {
+                    Predicate = r => r.Name.Contains("self")
+                });
             });
         }
     }
