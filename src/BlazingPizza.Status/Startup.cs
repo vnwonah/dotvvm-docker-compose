@@ -39,17 +39,16 @@ namespace BlazingPizza.Status
             // use DotVVM
             var dotvvmConfiguration = app.UseDotVVM<DotvvmStartup>(env.ContentRootPath);
             dotvvmConfiguration.AssertConfigurationIsValid();
+            // // use static files
+            // app.UseStaticFiles(new StaticFileOptions
+            // {
+            //     FileProvider = new PhysicalFileProvider(env.WebRootPath)
+            // });
 
             app.UseHealthChecksUI(config =>
             {
                 config.ResourcesPath = "/ui/resources";
                 config.UIPath = "/hc-ui";
-            });
-
-            // use static files
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(env.WebRootPath)
             });
 
             app.UseRouting();
